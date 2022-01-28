@@ -29,3 +29,4 @@
 build/
 
 .fvm/flutter_sdk
+*/.DS_Store

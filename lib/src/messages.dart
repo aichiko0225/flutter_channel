@@ -26,15 +26,27 @@ class CommonParams {
 
 class CallMethodParams {
 
+  /// 方法参与
   Map<Object, Object?>? arguments;
+  /// 方法名称
   String? methodName;
+  /// 类名（iOS可以使用类名和方法名来发送消息来调用）
+  String? className;
+
 
   Object encode() {
     final Map<Object, Object?> pigeonMap = <Object, Object?>{};
-    if (arguments != null) {
-      pigeonMap['arguments'] = arguments ?? {};
+
+    void addIfPresent(String fieldName, dynamic value) {
+      if (value != null) {
+        pigeonMap[fieldName] = value;
+      }
     }
     pigeonMap['methodName'] = methodName ?? '';
+
+    addIfPresent('arguments', arguments);
+    addIfPresent('className', className);
+
     return pigeonMap;
   }
 

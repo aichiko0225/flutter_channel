@@ -92,3 +92,6 @@ FlutterBridge.instance.callHandler('methodName', params: {}, responseCallback: (
 [[FlutterBridge instance] sendEventToFlutterWith:@"key" arguments:@{@"key": @"123"}];
 ```
 
+## Android端使用
+
+**Android 暂未完成**
