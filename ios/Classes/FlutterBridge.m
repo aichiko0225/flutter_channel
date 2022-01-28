@@ -80,7 +80,7 @@
                 if (strongSelf.delegate == nil) {
                     callback(@{
                         @"error": @{
-                            @"code": @"-1002",
+                            @"code": @"-1003",
                             @"message": @"delegate 未设置",
                             @"details": @"delegate 未设置，请使用setupDelegate初始化代理方法"
                         }

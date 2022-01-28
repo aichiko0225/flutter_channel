@@ -2,14 +2,93 @@
 
 封装flutter的通道插件
 
-## Getting Started
+flutter_channel 让开发者省略了手动搭桥的功能，通过事件标识key和参数map即可完成事件传递
+同样可以在调用原生方法的时候，加入回调。
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+## flutter端使用
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+ - 接收消息
+```dart
+///声明一个用来存回调的对象
+VoidCallback removeListener;
+
+///添加事件响应者,监听native发往flutter端的事件
+removeListener = FlutterBridge.instance.addEventListener("yourEventKey", (key, arguments) {
+  ///deal with your event here
+  return;
+});
+
+///然后在退出的时候（比如dispose中）移除监听者
+removeListener?.call();
+```
+
+ - 调用原生方法 native 来实现
+```dart
+// 调用原生方法
+FlutterBridge.instance.callHandler('methodName', params: {}, responseCallback: (map) {
+    // 设置回调
+    setState(() {
+        _callbackMap = Map.from(map);
+    });
+});
+```
+
+## iOS端使用
+
+- Flutter调用方法原生实现
+
+```objc
+// 创建一个 Delegate 类，用于实现方法
+@interface BridgeDelegate : NSObject<FlutterBridgeDelegate>
+{
+    int _count;
+}
+@end
+```
+
+```objc
+@implementation BridgeDelegate
+
+- (void)callHandler:(NSString *)methodName params:(NSDictionary *)params callback:(void (^)(id))callback {
+    
+    if (methodName) {
+        // 根据 methodName 来处理各类原生方法
+    }
+    
+    _count += 10;
+    
+    __weak typeof(self) weakSelf = self;
+    // 模拟 延迟回调
+    NSTimer *doNotWorkTimer =[NSTimer timerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+        if (callback) {
+            __strong typeof(self) strongSelf = weakSelf;
+            callback(@{
+                @"callback_key": @"callback_value",
+                @"count": @(strongSelf->_count)
+            });
+        }
+    }];
+    [[NSRunLoop currentRunLoop] addTimer:doNotWorkTimer forMode:NSDefaultRunLoopMode];
+}
+
+@end
+```
+
+```objc
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [GeneratedPluginRegistrant registerWithRegistry:self];
+
+    // Override point for customization after application launch.
+    BridgeDelegate *delegate = [[BridgeDelegate alloc] init];
+    [[FlutterBridge instance] setupDelegate:delegate];
+
+    return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+```
+
+- 发送消息给flutter
+```objc
+[[FlutterBridge instance] sendEventToFlutterWith:@"key" arguments:@{@"key": @"123"}];
+```
 
