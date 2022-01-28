@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 @protocol FlutterBinaryMessenger;
-@protocol FlutterBrigdeDelegate;
+@protocol FlutterBridgeDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 利用自定义配置进行初始化
 /// @param delegate FlutterBrigdeDelegate的实例，用于实现methodName 的处理方法
-- (void)setupDelegate:(id<FlutterBrigdeDelegate>)delegate;
+- (void)setupDelegate:(id<FlutterBridgeDelegate>)delegate;
 
 + (void)setupFlutterBinaryMessenger:(NSObject<FlutterBinaryMessenger> *)messenager;
 

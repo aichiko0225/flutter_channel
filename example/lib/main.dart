@@ -77,16 +77,20 @@ class _MyAppState extends State<MyApp> {
               Text('Running on: $_platformVersion\n'),
               Container(
                 height: 40,
-                child: const Text('点击浮动按钮之后 5秒后回调执行。'),
+                child: const Text('点击浮动按钮之后 3秒后回调执行。'),
               ),
-              Text('methodName: methodName on: $_callbackMap\n'),
+              Container(
+                margin: EdgeInsets.only(left: 20, right: 20),
+                child: Text('methodName: methodName on: $_callbackMap\n'),
+              )
+              
             ],
           ) 
         ),
         floatingActionButton: IconButton(onPressed: () {
           // 调用原生方法
           FlutterBridge.instance.callHandler('methodName', params: {}, responseCallback: (map) {
-            /// 可以设置回调
+            // 设置回调
             setState(() {
               _callbackMap = Map.from(map);
             });

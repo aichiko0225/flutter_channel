@@ -24,6 +24,29 @@ class CommonParams {
   }
 }
 
+class CallMethodParams {
+
+  Map<Object, Object?>? arguments;
+  String? methodName;
+
+  Object encode() {
+    final Map<Object, Object?> pigeonMap = <Object, Object?>{};
+    if (arguments != null) {
+      pigeonMap['arguments'] = arguments ?? {};
+    }
+    pigeonMap['methodName'] = methodName ?? '';
+    return pigeonMap;
+  }
+
+  static CallMethodParams decode(dynamic message) {
+    var pigeonMap = message;
+    assert(pigeonMap != null, 'pigeonMap was null');
+    return CallMethodParams()
+      ..arguments = Map<Object, Object?>.from(pigeonMap['arguments'])
+      ..methodName = pigeonMap['methodName'] as String?;
+  }
+}
+
 class ResponseParams {
 
   Map<Object, Object?>? arguments;

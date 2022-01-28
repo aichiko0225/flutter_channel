@@ -1,7 +1,42 @@
 #import "AppDelegate.h"
 #import "GeneratedPluginRegistrant.h"
+#import <flutter_channel/FlutterBridgeDelegate.h>
 #import <flutter_channel/FlutterBridge.h>
 #import <MBProgressHUD/MBProgressHUD.h>
+
+@interface BridgeDelegate : NSObject<FlutterBridgeDelegate>
+{
+    int _count;
+}
+
+@end
+
+@implementation BridgeDelegate
+
+- (void)callHandler:(NSString *)methodName params:(NSDictionary *)params callback:(void (^)(id))callback {
+    
+    if (methodName) {
+        // 根据 methodName 来处理各类原生方法
+    }
+    
+    _count += 10;
+    
+    __weak typeof(self) weakSelf = self;
+    // 创建 NSTimer
+    NSTimer *doNotWorkTimer =[NSTimer timerWithTimeInterval:3.0 repeats:NO block:^(NSTimer * _Nonnull timer) {
+        if (callback) {
+            __strong typeof(self) strongSelf = weakSelf;
+            callback(@{
+                @"callback_key": @"123",
+                @"count": @(strongSelf->_count)
+            });
+        }
+    }];
+    // NSTimer 加入 NSRunLoop
+    [[NSRunLoop currentRunLoop] addTimer:doNotWorkTimer forMode:NSDefaultRunLoopMode];
+}
+
+@end
 
 @implementation AppDelegate
 
@@ -11,6 +46,9 @@
     // Override point for customization after application launch.
 
 //    [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(delayMethod) userInfo:nil repeats:YES];
+
+    BridgeDelegate *delegate = [[BridgeDelegate alloc] init];
+    [[FlutterBridge instance] setupDelegate:delegate];
 
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }

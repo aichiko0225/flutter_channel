@@ -43,8 +43,8 @@ class BridgeListener {
     });
   }
 
-  Future<void> sendEventToNative(ResponseParams responseParams) async {
-    final Object encoded = responseParams.encode();
+  Future<void> sendEventToNative(CallMethodParams callMethodParams) async {
+    final Object encoded = callMethodParams.encode();
     final Map? replyMap = await _nativeChannel.send(encoded) as Map?;
     
     if (replyMap == null) {

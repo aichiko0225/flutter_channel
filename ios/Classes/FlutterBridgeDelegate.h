@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <Flutter/Flutter.h>
 
-@protocol FlutterBrigdeDelegate <NSObject>
+@protocol FlutterBridgeDelegate <NSObject>
 
 @required
 - (void)callHandler:(NSString *)methodName

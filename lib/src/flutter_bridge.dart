@@ -44,10 +44,10 @@ class FlutterBridge {
 
   callHandler(String methodName,
       {Map<String, dynamic>? params, ResponseCallback? responseCallback}) {
-    ResponseParams responseParams = ResponseParams()
+    CallMethodParams callMethodParams = CallMethodParams()
       ..methodName = methodName
       ..arguments = params;
-    _listener.sendEventToNative(responseParams);
+    _listener.sendEventToNative(callMethodParams);
     
     ///声明一个用来存回调的对象
     _listener.addMethodCallbackListener(methodName, responseCallback);

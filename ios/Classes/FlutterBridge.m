@@ -8,16 +8,13 @@
 #import "FlutterBridge.h"
 #import <Flutter/Flutter.h>
 #import "Messages.h"
-#import "FlutterBrigdeDelegate.h"
+#import "FlutterBridgeDelegate.h"
 
 @interface FlutterBridge ()
-{
-    int _count;
-}
 
 @property (nonatomic, strong) NSObject<FlutterBinaryMessenger> *binaryMessenger;
 
-@property (nonatomic, weak) NSObject<FlutterBrigdeDelegate> *delegate;
+@property (nonatomic, strong) id<FlutterBridgeDelegate> delegate;
 
 @property (nonatomic, strong) FlutterBasicMessageChannel *nativeChannel;
 
@@ -40,7 +37,7 @@
     [[FlutterBridge instance] setNativeMessageHandler];
 }
 
-- (void)setupDelegate:(id<FlutterBrigdeDelegate>)delegate {
+- (void)setupDelegate:(id<FlutterBridgeDelegate>)delegate {
     _delegate = delegate;
 }
 
@@ -109,13 +106,13 @@
                 if (strongSelf.delegate && [strongSelf.delegate respondsToSelector:@selector(callHandler:params:callback:)]) {
                     
                     [strongSelf.delegate callHandler:methodName params:params.arguments callback:^(id value) {
-                        
+                        if ([value isKindOfClass:[NSDictionary class]]) {
+                            [strongSelf sendCallbackToFlutter:methodName arguments:value];
+                        } else {
+                            // value的格式不正确
+                        }
                     }];
                 }
-                
-                // 根据方法命来定位相应的方法
-                
-                [[FlutterBridge instance] performSelector:@selector(afterDelayAction) withObject:nil afterDelay:5];
                 
                 callback(@{});
             }
@@ -129,14 +126,6 @@
             });
         }];
     }
-}
-
-- (void)afterDelayAction {
-    _count += 10;
-    
-    [self sendCallbackToFlutter:@"methodName" arguments:@{
-        @"callback_count": @(_count)
-    }];
 }
 
 - (void)sendCallbackToFlutter:(NSString *)methodName arguments:(NSDictionary*)arguments {
