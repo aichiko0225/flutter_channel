@@ -94,4 +94,30 @@ FlutterBridge.instance.callHandler('methodName', params: {}, responseCallback: (
 
 ## Android端使用
 
-**Android 暂未完成**
+- Flutter调用方法原生实现
+
+```java
+FlutterBridge.getInstance().setupDelegate(new FlutterBridgeDelegate() {
+    @Override
+    public void callHandler(String methodName, Map<String, Object> params, @Nullable BasicMessageChannel.Reply<Map<String, Object>> callback) {
+        if (callback != null) {
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("callback_key", "key1");
+                    map.put("callback_value", "value111");
+                    callback.reply(map);
+                }
+            };
+            Timer timer = new Timer();
+            timer.schedule(task, 3000);
+        }
+    }
+});
+```
+
+- 发送消息给flutter
+```java
+FlutterBridge.getInstance().sendEventToFlutter("key", new HashMap<>());
+```
