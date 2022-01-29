@@ -90,7 +90,7 @@
                 
                 CallMethodParams *params = [CallMethodParams fromMap:dic];
                 
-                if (params.methodName == nil && params.methodName.length == 0) {
+                if (params.methodName == nil || params.methodName.length == 0) {
                     callback(@{
                         @"error": @{
                             @"code": @"-1002",

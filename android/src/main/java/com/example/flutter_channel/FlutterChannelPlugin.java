@@ -19,6 +19,7 @@ public class FlutterChannelPlugin implements FlutterPlugin, MethodCallHandler {
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_channel");
+    FlutterBridge.setupFlutterBinaryMessenger(flutterPluginBinding.getBinaryMessenger());
     channel.setMethodCallHandler(this);
   }
 

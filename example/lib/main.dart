@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
     initPlatformState();
 
     removeListener = FlutterBridge.instance.addEventListener('key', (key, arguments) {
-
+      debugPrint('EventListener: $key');
       return;
     });
   }
