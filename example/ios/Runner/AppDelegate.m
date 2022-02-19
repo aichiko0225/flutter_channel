@@ -38,6 +38,10 @@
 
 @end
 
+@interface AppDelegate ()<NativeViewDelegate>
+
+@end
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application
@@ -50,8 +54,11 @@
     BridgeDelegate *delegate = [[BridgeDelegate alloc] init];
     [[FlutterBridge instance] setupDelegate:delegate];
 
+    [[FlutterBridge instance] setupViewDelegate: self];
+    
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
+
 
 - (void)delayMethod {
     [[FlutterBridge instance] sendEventToFlutterWith:@"key" arguments:@{@"key": @"123"}];
@@ -64,6 +71,25 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [hud hideAnimated:YES];
     });
+}
+
+- (UIView *)nativeSubview:(UIView *)superView params:(NSDictionary *)params {
+    
+    NSArray *childrens = params[@"children"];
+    
+    for (NSDictionary *dic in childrens) {
+        NSString *unitName = dic[@"unitName"];
+        NSString *value = dic[@"value"];
+        
+        if ([unitName isEqualToString:@"text"]) {
+            UILabel *label = [[UILabel alloc] init];
+            label.text = value;
+            [superView addSubview:label];
+            label.frame = CGRectMake(0, 0, 100, 20);
+        }
+    }
+    
+    return nil;
 }
 
 @end

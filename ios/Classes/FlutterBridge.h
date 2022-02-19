@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 @protocol FlutterBinaryMessenger;
 @protocol FlutterBridgeDelegate;
+@protocol NativeViewDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,12 +16,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark
 
+@property (nonatomic, strong, readonly) id<NativeViewDelegate> viewDelegate;
+
 /// Bridge全局单例
 + (instancetype)instance;
 
 /// 利用自定义配置进行初始化
 /// @param delegate FlutterBrigdeDelegate的实例，用于实现methodName 的处理方法
 - (void)setupDelegate:(id<FlutterBridgeDelegate>)delegate;
+
+/// 设置桥接原生视图的代理
+/// 可以根据传输的数据来添加View
+- (void)setupViewDelegate:(id<NativeViewDelegate>)viewDelegate;
 
 + (void)setupFlutterBinaryMessenger:(NSObject<FlutterBinaryMessenger> *)messenager;
 

@@ -1,5 +1,6 @@
 #import "FlutterChannelPlugin.h"
 #import "FlutterBridge.h"
+#import "DFNativeViewFactory.h"
 
 @implementation FlutterChannelPlugin
 
@@ -11,6 +12,10 @@
     
     FlutterChannelPlugin* instance = [[FlutterChannelPlugin alloc] init];
     [registrar addMethodCallDelegate:instance channel:channel];
+
+    DFNativeViewFactory *viewFactory = [[DFNativeViewFactory alloc] initWithMessenger:[registrar messenger]];
+
+    [registrar registerViewFactory:viewFactory withId:@"native_platform_view"];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {

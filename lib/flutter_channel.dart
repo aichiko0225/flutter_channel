@@ -3,6 +3,7 @@ library flutter_channel;
 export './src/flutter_bridge.dart';
 export './src/bridge_listener.dart';
 export './src/messages.dart';
+export './src/native_view.dart';
 
 /*
  * Flutter 与 Android iOS 原生的通信有以下三种方式

@@ -9,12 +9,15 @@
 #import <Flutter/Flutter.h>
 #import "Messages.h"
 #import "FlutterBridgeDelegate.h"
+#import "NativeViewDelegate.h"
 
 @interface FlutterBridge ()
 
 @property (nonatomic, strong) NSObject<FlutterBinaryMessenger> *binaryMessenger;
 
 @property (nonatomic, strong) id<FlutterBridgeDelegate> delegate;
+
+@property (nonatomic, strong, readwrite) id<NativeViewDelegate> viewDelegate;
 
 @property (nonatomic, strong) FlutterBasicMessageChannel *nativeChannel;
 
@@ -39,6 +42,10 @@
 
 - (void)setupDelegate:(id<FlutterBridgeDelegate>)delegate {
     _delegate = delegate;
+}
+
+- (void)setupViewDelegate:(id<NativeViewDelegate>)viewDelegate {
+    _viewDelegate = viewDelegate;
 }
 
 - (void)sendEventToFlutterWith:(NSString *)key arguments:(NSDictionary *)arguments {
